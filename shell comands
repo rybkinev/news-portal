@@ -1,0 +1,48 @@
+./manage.py createsuperuser
+
+./manage.py shell
+
+from django.contrib.auth.models import User
+from accounts.models import Author
+from posts.models import Category, Post, Comment
+from random import choice
+
+a1 = Author.objects.create(system_user = User.objects.create_user('user1'))
+a2 = Author.objects.create(system_user = User.objects.create_user('user2'))
+
+c1 = Category.objects.create(name = '1')
+c2 = Category.objects.create(name = '2')
+c3 = Category.objects.create(name = '3')
+c4 = Category.objects.create(name = '4')
+
+Post.objects.create(created_by=a1, type_post='news', header='news!!! news!!! news!!!', text='Это сенсация.. Первая добавленная новость уже в ленте!!').categories.set([c1, c2])
+
+adm = Author.objects.create(system_user = User.objects.get(username='admin'))
+Post.objects.create(created_by=adm, header='post1', text='text post1').categories.set([c1, c2, c3, c4])
+
+Post.objects.create(created_by=a2, header='post2', text='text post2').categories.set([c1, c2, c3, c4])
+
+for i in Post.objects.all():
+    author = choice(Author.objects.all())
+    Comment.objects.create(created_by=author, post_id=i, text='Any comment')
+
+Comment.objects.create(created_by=author, post_id=i, text='Any comment')
+
+for i in range(500):
+    like = choice([True, False])
+    post = choice(Post.objects.all())
+    if like:
+        post.like()
+    else:
+        post.dislike()
+
+for i in range(500):
+    like = choice([True, False])
+    post = choice(Comment.objects.all())
+    if like:
+        post.like()
+    else:
+        post.dislike()
+
+for i in Author.objects.all():
+    i.update_rating()
