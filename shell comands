@@ -46,3 +46,9 @@ for i in range(500):
 
 for i in Author.objects.all():
     i.update_rating()
+
+Author.objects.order_by('-rating').values('system_user__username', 'rating').first()
+
+Post.objects.order_by('-rating').values('created_by__system_user__username', 'rating', 'header').first()
+Post.objects.order_by('-rating').first().preview
+Post.objects.order_by('-rating').first().comment_set.all().values('created_at', 'created_by__system_user__username', 'rating', 'text')

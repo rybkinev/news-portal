@@ -4,7 +4,7 @@ from posts.models import Post, Category, Comment
 
 
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('created_at', 'created_by', 'header', 'rating', 'visible')
+    list_display = ('created_at', 'created_by', 'header', 'rating', 'visible', 'preview')
 
 
 class CategoryAdmin(admin.ModelAdmin):
