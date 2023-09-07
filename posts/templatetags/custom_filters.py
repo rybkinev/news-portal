@@ -7,7 +7,6 @@ register = template.Library()
 
 
 @register.filter
-@stringfilter
 def censor(value):
     """
     фильтр будет обрабатывать Текст на предмет нежелательных слов.
@@ -16,6 +15,9 @@ def censor(value):
     :param value: str
     :return: str
     """
+    if not isinstance(value, str):
+        raise TypeError("Фильтр цензурирования можно применить только к строкам")
+
     cens_all = Censor.objects.all()
     for i in cens_all:
         word = i.word
