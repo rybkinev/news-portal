@@ -9,12 +9,12 @@ post_types = [
 ]
 
 
-def change_rating(obj, like):
-    if like:
-        obj.rating += 1
-    else:
-        obj.rating -= 1
-    obj.save()
+# def change_rating(obj, like):
+#     if like:
+#         obj.rating += 1
+#     else:
+#         obj.rating -= 1
+#     obj.save()
 
 
 class Category(models.Model):
@@ -56,12 +56,20 @@ class Post(models.Model):
     def like(self):
         # self.rating += 1
         # self.save()
-        change_rating(self, True)
+        self.change_rating(self, True)
 
     def dislike(self):
         # self.rating -= 1
         # self.save()
-        change_rating(self, False)
+        self.change_rating(self, False)
+
+    @staticmethod
+    def change_rating(obj, like):
+        if like:
+            obj.rating += 1
+        else:
+            obj.rating -= 1
+        obj.save()
 
     class Meta:
         verbose_name = 'Пост'
@@ -85,12 +93,12 @@ class Comment(models.Model):
     def like(self):
         # self.rating += 1
         # self.save()
-        change_rating(self, True)
+        Post.change_rating(self, True)
 
     def dislike(self):
         # self.rating -= 1
         # self.save()
-        change_rating(self, False)
+        Post.change_rating(self, False)
 
     class Meta:
         verbose_name = 'Комментарий'
