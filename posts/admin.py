@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from posts.models import Post, Category, Comment
+from posts.models import Post, Category, Comment, Censor
 
 
 class PostAdmin(admin.ModelAdmin):
@@ -15,6 +15,11 @@ class CommentAdmin(admin.ModelAdmin):
     list_display = ('post_id_id', 'created_by_id', 'rating')
 
 
+class CensorAdmin(admin.ModelAdmin):
+    list_display = ('word',)
+
+
 admin.site.register(Post, PostAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Comment, CommentAdmin)
+admin.site.register(Censor, CensorAdmin)

@@ -82,3 +82,11 @@ class Comment(models.Model):
     class Meta:
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
+
+
+class Censor(models.Model):
+    word = models.CharField(max_length=20, null=False)
+
+    class Meta:
+        verbose_name = 'Цензура'
+        verbose_name_plural = 'Цензура'
