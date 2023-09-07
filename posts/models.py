@@ -2,9 +2,6 @@ from django.db import models
 from textwrap import shorten
 import enum
 
-# TODO Отметил несколько мест где код можно улучшить и доработать:
-# - В моделях Post и Comment вы можете добавить параметр related_name для поля created_by,
-# чтобы сделать обратные связи более ясными и читаемыми.
 
 post_types = [
     ('news', 'Новость'),
