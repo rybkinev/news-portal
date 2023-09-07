@@ -1,11 +1,23 @@
 from django.db import models
 from textwrap import shorten
+import enum
 
+# TODO Отметил несколько мест где код можно улучшить и доработать:
+# - В моделях Post и Comment вы можете добавить параметр related_name для поля created_by,
+# чтобы сделать обратные связи более ясными и читаемыми.
 
 post_types = [
     ('news', 'Новость'),
     ('article', 'Статья')
 ]
+
+
+def change_rating(obj, like):
+    if like:
+        obj.rating += 1
+    else:
+        obj.rating -= 1
+    obj.save()
 
 
 class Category(models.Model):
@@ -23,7 +35,7 @@ class Category(models.Model):
 
 class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey('accounts.Author', on_delete=models.PROTECT)
+    created_by = models.ForeignKey('accounts.Author', on_delete=models.PROTECT, related_name='posts')
     update_at = models.DateTimeField(auto_now=True)
     type_post = models.CharField(
         max_length=10,
@@ -45,12 +57,14 @@ class Post(models.Model):
         return shorten(str(self.text), 124, placeholder='...')
 
     def like(self):
-        self.rating += 1
-        self.save()
+        # self.rating += 1
+        # self.save()
+        change_rating(self, True)
 
     def dislike(self):
-        self.rating -= 1
-        self.save()
+        # self.rating -= 1
+        # self.save()
+        change_rating(self, False)
 
     class Meta:
         verbose_name = 'Пост'
@@ -64,7 +78,7 @@ class PostCategory(models.Model):
 
 class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey('accounts.Author', on_delete=models.PROTECT)
+    created_by = models.ForeignKey('accounts.Author', on_delete=models.PROTECT, related_name='comments')
     update_at = models.DateTimeField(auto_now=True)
     post_id = models.ForeignKey(Post, on_delete=models.CASCADE)
     text = models.TextField(null=False)
@@ -72,12 +86,14 @@ class Comment(models.Model):
     visible = models.BooleanField(default=True)
 
     def like(self):
-        self.rating += 1
-        self.save()
+        # self.rating += 1
+        # self.save()
+        change_rating(self, True)
 
     def dislike(self):
-        self.rating -= 1
-        self.save()
+        # self.rating -= 1
+        # self.save()
+        change_rating(self, False)
 
     class Meta:
         verbose_name = 'Комментарий'

@@ -12,11 +12,13 @@ class Author(models.Model):
     def update_rating(self):
         total_rating_list = []
 
-        rating_posts = Post.objects.filter(created_by=self.id).aggregate(total_sum=Sum('rating')).get('total_sum', 0)
+        # rating_posts = Post.objects.filter(created_by=self.id).aggregate(total_sum=Sum('rating')).get('total_sum', 0)
+        rating_posts = self.posts.all().aggregate(total_sum=Sum('rating')).get('total_sum', 0)
         if rating_posts:
             total_rating_list.append(rating_posts * 3)
 
-        rating_com = Comment.objects.filter(created_by=self.id).aggregate(total_sum=Sum('rating')).get('total_sum', 0)
+        # rating_com = Comment.objects.filter(created_by=self.id).aggregate(total_sum=Sum('rating')).get('total_sum', 0)
+        rating_com = self.comments.all().aggregate(total_sum=Sum('rating')).get('total_sum', 0)
         if rating_com:
             total_rating_list.append(rating_com)
 
