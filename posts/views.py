@@ -9,6 +9,7 @@ class PostsView(ListView):
     ordering = '-created_at'
     template_name = 'news.html'
     context_object_name = 'news'
+    paginate_by = 3
 
     def get_queryset(self):
         # Получение и фильтрация записей из базы данных
