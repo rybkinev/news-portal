@@ -5,4 +5,5 @@ from .views import PostsView, PostDetailsView
 urlpatterns = [
     path('', PostsView.as_view()),
     path('<int:pk>', PostDetailsView.as_view()),
+    path('search', PostsView.as_view(search=True))
 ]

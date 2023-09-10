@@ -9,14 +9,6 @@ post_types = [
 ]
 
 
-# def change_rating(obj, like):
-#     if like:
-#         obj.rating += 1
-#     else:
-#         obj.rating -= 1
-#     obj.save()
-
-
 class Category(models.Model):
     name = models.CharField(
         max_length=255,
