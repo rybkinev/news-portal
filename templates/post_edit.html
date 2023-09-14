@@ -1,0 +1,19 @@
+{% extends 'default.html' %}
+
+{% block content %}
+    {% if request.path == '/news/create/' %}
+        <h1>Добавить новость</h1>
+    {% elif request.path == '/article/create/' %}
+        <h1>Добавить статью</h1>
+    {% elif '/article/' in request.path and '/edit/' in request.path %}
+        <h1>Редактирование статьи</h1>
+    {% elif '/news/' in request.path and '/edit/' in request.path %}
+        <h1>Редактирование новости</h1>
+    {% endif %}
+    <hr>
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Save" />
+    </form>
+{% endblock content %}

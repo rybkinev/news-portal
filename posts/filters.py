@@ -1,6 +1,6 @@
 from django.forms import DateTimeInput
-from django_filters import FilterSet, DateTimeFilter
-from .models import Post
+from django_filters import FilterSet, DateTimeFilter, ChoiceFilter
+from .models import Post, POST_TYPES
 
 
 class PostFilter(FilterSet):
@@ -12,6 +12,10 @@ class PostFilter(FilterSet):
             attrs={'type': 'datetime-local'},
         ),
     )
+    type_post = ChoiceFilter(
+        label='Type', choices=POST_TYPES
+    )
+
     class Meta:
         # В Meta классе мы должны указать Django модель,
         # в которой будем фильтровать записи.
@@ -22,5 +26,5 @@ class PostFilter(FilterSet):
             # поиск по названию
             'header': ['icontains'],
             # количество товаров должно быть больше или равно
-            'type_post': ['icontains'],
+            # 'type_post': ['icontains'],
         }

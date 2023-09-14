@@ -22,5 +22,5 @@ from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home_redirect, name='home'),
-    path('news/', include('posts.urls')),
+    path('', include('posts.urls')),
 ]

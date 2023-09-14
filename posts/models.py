@@ -2,8 +2,9 @@ from django.db import models
 from textwrap import shorten
 import enum
 
+from django.urls import reverse
 
-post_types = [
+POST_TYPES = [
     ('news', 'Новость'),
     ('article', 'Статья')
 ]
@@ -28,7 +29,7 @@ class Post(models.Model):
     update_at = models.DateTimeField(auto_now=True)
     type_post = models.CharField(
         max_length=10,
-        choices=post_types,
+        choices=POST_TYPES,
         default='article'
     )
     header = models.CharField(
@@ -62,6 +63,9 @@ class Post(models.Model):
         else:
             obj.rating -= 1
         obj.save()
+
+    def get_absolute_url(self):
+        return reverse('news_detail', args=[str(self.id)])
 
     class Meta:
         verbose_name = 'Пост'

@@ -1,0 +1,15 @@
+{% extends 'default.html' %}
+
+{% block content %}
+    {% if '/article/' in request.path and '/delete/' in request.path %}
+        <h1>Удаление статьи</h1>
+    {% elif '/news/' in request.path and '/delete/' in request.path %}
+        <h1>Удаление новости</h1>
+    {% endif %}
+    <hr>
+    <form action="" method="post">
+        {% csrf_token %}
+        <p>Удаляем "{{ object.header }}" созданный "{{ object.created_at|date:'d M Y H:m:s' }}"?</p>
+        <input type="submit" value="Delete" />
+    </form>
+{% endblock content %}

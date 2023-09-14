@@ -31,7 +31,8 @@ Posts
     {% endif %}
 
     {% if news %}
-        <h3>Количество постов: {{ news|length }}</h3>
+        <h3>Всего записей: {{ count_posts }}</h3>
+        <h3>Записей на странице: {{ news|length }}</h3>
         <table>
             <tr>
                <td>Заголовок</td>
@@ -40,11 +41,28 @@ Posts
             </tr>
             {% for post in news %}
                 <tr>
-                   <td>
-                       <a href="{{ post.id }}">{{ post.header|censor }}</a>
-                   </td>
-                   <td>{{ post.created_at|date:'d M Y' }}</td>
-                   <td>{{ post.preview|truncatechars:20|censor }}</td>
+                    <td>
+                        <a href="{{ post.id }}">{{ post.header|censor }}</a>
+                    </td>
+                    <td>{{ post.get_type_post_display }}</td>
+                    <td>{{ post.created_at|date:'d M Y' }}</td>
+                    <td> {{ post.preview|truncatechars:20|censor }} </td>
+                    {% if post.type_post == 'news' %}
+{#                        Такие ссылки сделаны из за страницы поиска.#}
+                        <td>
+                            <a href="{{ request.scheme }}://{{ request.get_host }}/news/{{ post.id }}/edit">Edit</a>
+                        </td>
+                        <td>
+                            <a href="{{ request.scheme }}://{{ request.get_host }}/news/{{ post.id }}/delete">Delete post</a>
+                        </td>
+                    {% elif post.type_post == 'article' %}
+                        <td>
+                            <a href="{{ request.scheme }}://{{ request.get_host }}/article/{{ post.id }}/edit">Edit</a>
+                        </td>
+                        <td>
+                            <a href="{{ request.scheme }}://{{ request.get_host }}/article/{{ post.id }}/delete">Delete post</a>
+                        </td>
+                    {% endif %}
                 </tr>
            {% endfor %}
        </table>
