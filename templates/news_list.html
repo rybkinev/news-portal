@@ -35,9 +35,14 @@ Posts
         <h3>Записей на странице: {{ news|length }}</h3>
         <table>
             <tr>
-               <td>Заголовок</td>
-               <td>Дата публикации</td>
-               <td>Предпросмотр</td>
+                <td>Заголовок</td>
+                <td>Тип поста</td>
+                <td>Автор публикации</td>
+                <td>Дата публикации</td>
+                <td>Предпросмотр</td>
+                {% if perms.posts.change_post or perms.posts.delete_post %}
+                    <td>Доступные действия</td>
+                {% endif %}
             </tr>
             {% for post in news %}
                 <tr>
@@ -45,22 +50,26 @@ Posts
                         <a href="{{ post.id }}">{{ post.header|censor }}</a>
                     </td>
                     <td>{{ post.get_type_post_display }}</td>
+                    <td>{{ post.created_by.system_user.username }}</td>
                     <td>{{ post.created_at|date:'d M Y' }}</td>
                     <td> {{ post.preview|truncatechars:20|censor }} </td>
                     {% if post.type_post == 'news' %}
-{#                        Такие ссылки сделаны из за страницы поиска.#}
-                        <td>
-                            <a href="{{ request.scheme }}://{{ request.get_host }}/news/{{ post.id }}/edit">Edit</a>
-                        </td>
-                        <td>
-                            <a href="{{ request.scheme }}://{{ request.get_host }}/news/{{ post.id }}/delete">Delete post</a>
-                        </td>
+                            <td>
+                                {% if perms.posts.change_post %}
+                                    <a href="{% url 'news_update' post.id %}">Edit</a>
+                                {% endif %}
+                                {% if perms.posts.delete_post %}
+                                    <a href="{% url 'news_delete' post.id %}">Delete post</a>
+                                {% endif %}
+                            </td>
                     {% elif post.type_post == 'article' %}
                         <td>
-                            <a href="{{ request.scheme }}://{{ request.get_host }}/article/{{ post.id }}/edit">Edit</a>
-                        </td>
-                        <td>
-                            <a href="{{ request.scheme }}://{{ request.get_host }}/article/{{ post.id }}/delete">Delete post</a>
+                            {% if perms.posts.change_post %}
+                                <a href="{% url 'article_update' post.id %}">Edit</a>
+                            {% endif %}
+                            {% if perms.posts.delete_post %}
+                                <a href="{% url 'article_delete' post.id %}">Delete post</a>
+                            {% endif %}
                         </td>
                     {% endif %}
                 </tr>

@@ -1,18 +1,21 @@
-from django.shortcuts import render
+from datetime import datetime
+
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
-from posts.filters import PostFilter
-from posts.forms import NewsForm
-from posts.models import Post
+from .filters import PostFilter
+from .forms import NewsForm
+from .models import Post
+from accounts.models import Author
 
 
 class PostsView(ListView):
     model = Post
     ordering = '-created_at'
-    template_name = 'news.html'
+    template_name = 'news_list.html'
     context_object_name = 'news'
-    paginate_by = 3
+    paginate_by = 10
     search = False
 
     def __init__(self, search=False):
@@ -42,7 +45,8 @@ class PostDetailsView(DetailView):
     context_object_name = 'post'
 
 
-class NewsCreateView(CreateView):
+class NewsCreateView(PermissionRequiredMixin, CreateView):
+    permission_required = ('posts.add_post',)
     form_class = NewsForm
     model = Post
     template_name = 'post_edit.html'
@@ -50,22 +54,35 @@ class NewsCreateView(CreateView):
     def form_valid(self, form):
         post = form.save(commit=False)
         post.type_post = 'news'
+
+        user = self.request.user
+        post.created_by = Author.objects.get(system_user=user)
+
         return super(NewsCreateView, self).form_valid(form)
 
 
-class NewsEditView(UpdateView):
+class NewsEditView(PermissionRequiredMixin, UpdateView):
+    permission_required = ('posts.change_post',)
     form_class = NewsForm
     model = Post
     template_name = 'post_edit.html'
 
+    def form_valid(self, form):
+        post = form.save(commit=False)
+        post.update_at = datetime.now()
 
-class NewsDeleteView(DeleteView):
+        return super(NewsEditView, self).form_valid(form)
+
+
+class NewsDeleteView(PermissionRequiredMixin, DeleteView):
+    permission_required = ('posts.delete_post',)
     model = Post
     template_name = 'post_delete.html'
     success_url = reverse_lazy('news')
 
 
-class ArticleCreateView(CreateView):
+class ArticleCreateView(PermissionRequiredMixin, CreateView):
+    permission_required = ('posts.add_post',)
     form_class = NewsForm
     model = Post
     template_name = 'post_edit.html'

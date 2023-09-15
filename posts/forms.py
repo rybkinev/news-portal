@@ -8,16 +8,11 @@ from .models import Post, Category
 class NewsForm(forms.ModelForm):
     header = forms.CharField(label='Header', max_length=200)
     text = forms.TextInput()
-    created_by = forms.ModelChoiceField(label='Author', queryset=Author.objects.all())
-    # type_post = forms.ModelChoiceField(
-    #     label='Category', queryset=Category.objects.all()
-    # )
 
     class Meta:
         model = Post
         # fields = '__all__'
         fields = [
-            'created_by',    # TODO поля не должно быть. действия доступны только авторизованным
             'header',
             'text',
         ]
