@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
@@ -35,6 +35,9 @@ class PostsView(ListView):
         context['filterset'] = self.filterset
         context['search'] = self.search
         context['count_posts'] = Post.objects.filter(visible=True, created_by__hide_posts=False).count()
+        context['is_admin'] = self.request.user.groups.filter(name='admin').exists()
+        user = self.request.user
+        context['author'] = user.author if user.id else None
 
         return context
 
@@ -61,7 +64,7 @@ class NewsCreateView(PermissionRequiredMixin, CreateView):
         return super(NewsCreateView, self).form_valid(form)
 
 
-class NewsEditView(PermissionRequiredMixin, UpdateView):
+class PostEditView(PermissionRequiredMixin, UserPassesTestMixin, UpdateView):
     permission_required = ('posts.change_post',)
     form_class = NewsForm
     model = Post
@@ -71,14 +74,23 @@ class NewsEditView(PermissionRequiredMixin, UpdateView):
         post = form.save(commit=False)
         post.update_at = datetime.now()
 
-        return super(NewsEditView, self).form_valid(form)
+        return super(PostEditView, self).form_valid(form)
+
+    def test_func(self):
+        is_admin = self.request.user.groups.filter(name='admin').exists()
+        post = self.get_object()
+        return is_admin or self.request.user == post.created_by.system_user
 
 
-class NewsDeleteView(PermissionRequiredMixin, DeleteView):
+class PostDeleteView(PermissionRequiredMixin, UserPassesTestMixin, DeleteView):
     permission_required = ('posts.delete_post',)
     model = Post
     template_name = 'post_delete.html'
     success_url = reverse_lazy('news')
+
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user == post.created_by.system_user
 
 
 class ArticleCreateView(PermissionRequiredMixin, CreateView):
@@ -90,4 +102,8 @@ class ArticleCreateView(PermissionRequiredMixin, CreateView):
     def form_valid(self, form):
         post = form.save(commit=False)
         post.type_post = 'article'
+
+        user = self.request.user
+        post.created_by = Author.objects.get(system_user=user)
+
         return super(ArticleCreateView, self).form_valid(form)

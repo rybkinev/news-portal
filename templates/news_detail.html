@@ -10,6 +10,7 @@ Post
     {% if post.visible %}
         <h1>{{ post.header|censor }}</h1>
         <h5>Дата написания: {{ post.created_at|date:'d M y' }}</h5>
+        <h6>Дата изменения: {{ post.update_at|date:'d M y' }}</h6>
         {{ post.text|censor }}
     {% else %}
         <h2>Данный пост скрыт от просмотра, если он Вам жизненно необходим, обратитесь к Администрации сайта</h2>

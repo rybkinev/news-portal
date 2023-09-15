@@ -55,19 +55,19 @@ Posts
                     <td> {{ post.preview|truncatechars:20|censor }} </td>
                     {% if post.type_post == 'news' %}
                             <td>
-                                {% if perms.posts.change_post %}
+                                {% if perms.posts.change_post and post.created_by == author or is_admin %}
                                     <a href="{% url 'news_update' post.id %}">Edit</a>
                                 {% endif %}
-                                {% if perms.posts.delete_post %}
+                                {% if perms.posts.delete_post and post.created_by == author or is_admin %}
                                     <a href="{% url 'news_delete' post.id %}">Delete post</a>
                                 {% endif %}
                             </td>
                     {% elif post.type_post == 'article' %}
                         <td>
-                            {% if perms.posts.change_post %}
+                            {% if perms.posts.change_post and post.created_by == author or is_admin %}
                                 <a href="{% url 'article_update' post.id %}">Edit</a>
                             {% endif %}
-                            {% if perms.posts.delete_post %}
+                            {% if perms.posts.delete_post and post.created_by == author or is_admin %}
                                 <a href="{% url 'article_delete' post.id %}">Delete post</a>
                             {% endif %}
                         </td>
