@@ -8,7 +8,7 @@ class NewsForm(forms.ModelForm):
     header = forms.CharField(label='Header', max_length=200)
     text = forms.TextInput()
     categories = forms.ModelMultipleChoiceField(
-        queryset=Category.objects.all(),
+        queryset=Category.objects.filter(valid=True),
         label='Categories',
         widget=forms.CheckboxSelectMultiple(),
     )

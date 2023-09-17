@@ -1,6 +1,6 @@
-from django.forms import DateTimeInput
-from django_filters import FilterSet, DateTimeFilter, ChoiceFilter
-from .models import Post, POST_TYPES
+from django.forms import DateTimeInput, Select
+from django_filters import FilterSet, DateTimeFilter, ChoiceFilter, ModelChoiceFilter
+from .models import Post, POST_TYPES, Category
 
 
 class PostFilter(FilterSet):
@@ -13,7 +13,16 @@ class PostFilter(FilterSet):
         ),
     )
     type_post = ChoiceFilter(
-        label='Type', choices=POST_TYPES
+        label='Type',
+        choices=POST_TYPES
+    )
+    # TODO в списке должно быть наименование, а не объект
+    categories = ModelChoiceFilter(
+        field_name='categories',
+        to_field_name='name',
+        queryset=Category.objects.filter(valid=True),
+        label='Categories',
+        # widget=Select(attrs={'class': 'form-control'}),
     )
 
     class Meta:
@@ -23,7 +32,5 @@ class PostFilter(FilterSet):
         # В fields мы описываем по каким полям модели
         # будет производиться фильтрация.
         fields = {
-            # поиск по названию
             'header': ['icontains'],
-            # 'type_post': ['icontains'],
         }
