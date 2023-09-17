@@ -17,8 +17,8 @@ Post
             <ul>
                 {% for comment in comments %}
                     <li>
-                        <div>Автор: {{ comment.created_by.system_user.username }}</div>
                         <div>{{ comment.text }}</div>
+                        <div>Автор: {{ comment.created_by.system_user.username }}</div>
                     </li>
                 {% endfor %}
             </ul>
@@ -26,7 +26,13 @@ Post
             <h6>Еще нет ни одного комментария. Вы можете быть первым</h6>
         {% endif %}
         {% if user.is_authenticated %}
+            <form method="post">
+                {% csrf_token %}
+                {{ comment_form.as_p }}
+                <button type="submit">Добавить комментарий</button>
+            </form>
         {% else %}
+            <h6>Чтобы написать комментарий, Вам необходимо авторизоваться</h6>
         {% endif %}
     {% else %}
         <h2>Данный пост скрыт от просмотра, если он Вам жизненно необходим, обратитесь к Администрации сайта</h2>

@@ -25,6 +25,5 @@ class PostFilter(FilterSet):
         fields = {
             # поиск по названию
             'header': ['icontains'],
-            # количество товаров должно быть больше или равно
             # 'type_post': ['icontains'],
         }

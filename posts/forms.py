@@ -2,7 +2,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 
 from accounts.models import Author
-from .models import Post, Category
+from .models import Post, Category, Comment
 
 
 class NewsForm(forms.ModelForm):
@@ -27,3 +27,11 @@ class NewsForm(forms.ModelForm):
             })
 
         return cleaned_data
+
+
+class CommentForm(forms.ModelForm):
+    text = forms.TextInput()
+
+    class Meta:
+        model = Comment
+        fields = ['text']

@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 from .filters import PostFilter
-from .forms import NewsForm
+from .forms import NewsForm, CommentForm
 from .models import Post, Comment
 from accounts.models import Author
 
@@ -50,7 +50,19 @@ class PostDetailsView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(PostDetailsView, self).get_context_data(**kwargs)
         context['comments'] = Comment.objects.filter(visible=True, post_id=context['post'])
+        context['comment_form'] = CommentForm()
         return context
+
+    def post(self, request, *args, **kwargs):
+        post = self.get_object()
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post_id = post
+            user = self.request.user
+            comment.created_by = Author.objects.get(system_user=user)
+            comment.save()
+        return self.get(request, *args, **kwargs)
 
 
 class NewsCreateView(PermissionRequiredMixin, CreateView):

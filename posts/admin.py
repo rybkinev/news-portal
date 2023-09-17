@@ -12,7 +12,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ('post_id_id', 'created_by_id', 'rating')
+    list_display = ('post_id_id', 'visible', 'created_by_id', 'rating')
 
 
 class CensorAdmin(admin.ModelAdmin):
