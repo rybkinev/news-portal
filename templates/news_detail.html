@@ -12,6 +12,22 @@ Post
         <h5>Дата написания: {{ post.created_at|date:'d M y' }}</h5>
         <h6>Дата изменения: {{ post.update_at|date:'d M y' }}</h6>
         {{ post.text|censor }}
+        <h5>Комментарии:</h5>
+        {% if comments %}
+            <ul>
+                {% for comment in comments %}
+                    <li>
+                        <div>Автор: {{ comment.created_by.system_user.username }}</div>
+                        <div>{{ comment.text }}</div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <h6>Еще нет ни одного комментария. Вы можете быть первым</h6>
+        {% endif %}
+        {% if user.is_authenticated %}
+        {% else %}
+        {% endif %}
     {% else %}
         <h2>Данный пост скрыт от просмотра, если он Вам жизненно необходим, обратитесь к Администрации сайта</h2>
     {% endif %}
