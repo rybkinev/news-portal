@@ -39,6 +39,9 @@ class PostsView(ListView):
         user = self.request.user
         context['author'] = user.author if user.id else None
 
+        for post in context['news']:
+            post.visible_comments_count = post.comment_set.filter(visible=True).count()
+
         return context
 
 

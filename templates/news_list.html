@@ -54,7 +54,7 @@ Posts
                     <td>{{ post.created_by.system_user.username }}</td>
                     <td>{{ post.created_at|date:'d M Y' }}</td>
                     <td> {{ post.preview|truncatechars:20|censor }} </td>
-                    <td>{{ post.comment_set.count }}</td>
+                    <td>{{ post.visible_comments_count }}</td>
                     {% if post.type_post == 'news' %}
                             <td>
                                 {% if perms.posts.change_post and post.created_by == author or is_admin %}
