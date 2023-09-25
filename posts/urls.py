@@ -1,6 +1,7 @@
 from django.urls import path, include
 
 from . import views
+from .views import subscriptions
 
 news_patterns = [
     path('', views.PostsView.as_view(), name='news'),
@@ -19,5 +20,6 @@ article_patterns = [
 
 urlpatterns = [
     path('news/', include(news_patterns)),
-    path('article/', include(article_patterns))
+    path('article/', include(article_patterns)),
+    path('subscriptions/', subscriptions, name='subscriptions'),
 ]

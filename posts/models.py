@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from textwrap import shorten
 import enum
@@ -107,3 +108,16 @@ class Censor(models.Model):
     class Meta:
         verbose_name = 'Цензура'
         verbose_name_plural = 'Цензура'
+
+
+class Subscription(models.Model):
+    user = models.ForeignKey(
+        to=User,
+        on_delete=models.CASCADE,
+        related_name='subscriptions',
+    )
+    category = models.ForeignKey(
+        to='Category',
+        on_delete=models.CASCADE,
+        related_name='subscriptions',
+    )

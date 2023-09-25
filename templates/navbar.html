@@ -1,0 +1,12 @@
+
+<nav>
+  <ul>
+    <li class="dropdown">
+      <a href="#" class="dropbtn">{{ user }}</a>
+      <div class="dropdown-content">
+        <a href="{% url 'subscriptions' %}">Мои подписки</a>
+        <a href="{% url 'account_logout' %}">Выйти</a>
+      </div>
+    </li>
+  </ul>
+</nav>

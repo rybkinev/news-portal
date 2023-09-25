@@ -9,6 +9,7 @@
         <!-- Core theme CSS (includes Bootstrap)-->
         {% load static %}
         <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+        <link href="{% static 'css/test_styles.css' %}" rel="stylesheet" />
         {% load custom_tags %}
         {% load socialaccount %}
 
@@ -62,8 +63,9 @@
             </div>
             <h7 style="text-align: right; color: white;">{% current_time '%d %b %Y' %}</h7>
             {% if user.is_authenticated %}
-                <p style="text-align: right; color: white; margin: 0 20px">{{ user }}</p>
-                <a href="{% url 'account_logout' %}">Logout</a>
+{#                <p style="text-align: right; color: white; margin: 0 20px">{{ user }}</p>#}
+{#                <a href="{% url 'account_logout' %}">Logout</a>#}
+                {% include 'navbar.html' %}
             {% else %}
                 <a style="text-align: right; margin: 0 20px" href="{% provider_login_url 'yandex' %}">Войти</a>
             {% endif %}
