@@ -28,6 +28,7 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey('accounts.Author', on_delete=models.PROTECT, related_name='posts')
     update_at = models.DateTimeField(auto_now=True)
+    is_update = models.BooleanField(default=False)
     type_post = models.CharField(
         max_length=10,
         choices=POST_TYPES,
