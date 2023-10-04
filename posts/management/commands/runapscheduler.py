@@ -4,10 +4,8 @@ import logging
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
 from django.conf import settings
-from django.contrib.auth.models import User
 from django.core.mail import EmailMultiAlternatives
 from django.core.management.base import BaseCommand
-from django.db.models import F
 from django_apscheduler import util
 from django_apscheduler.jobstores import DjangoJobStore
 from django_apscheduler.models import DjangoJobExecution
@@ -87,7 +85,7 @@ class Command(BaseCommand):
 
         scheduler.add_job(
             sending_new_posts,
-            trigger=CronTrigger(hour='18', day_of_week=5),
+            trigger=CronTrigger(hour='18', day_of_week=4),
             id="sending_new_posts",
             max_instances=1,
             replace_existing=True,
