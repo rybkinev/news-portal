@@ -48,6 +48,10 @@ class Post(models.Model):
     def preview(self):
         return shorten(str(self.text), 124, placeholder='...')
 
+    @property
+    def absolute_url(self):
+        return reverse('news_detail', args=[str(self.id)])
+
     def like(self):
         # self.rating += 1
         # self.save()

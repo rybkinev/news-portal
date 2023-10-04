@@ -113,8 +113,9 @@ class PostDeleteView(PermissionRequiredMixin, UserPassesTestMixin, DeleteView):
     success_url = reverse_lazy('news')
 
     def test_func(self):
+        is_admin = self.request.user.groups.filter(name='admin').exists()
         post = self.get_object()
-        return self.request.user == post.created_by.system_user
+        return is_admin or self.request.user == post.created_by.system_user
 
 
 class ArticleCreateView(PermissionRequiredMixin, CreateView):
