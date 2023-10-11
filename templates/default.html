@@ -12,65 +12,68 @@
         <link href="{% static 'css/test_styles.css' %}" rel="stylesheet" />
         {% load custom_tags %}
         {% load socialaccount %}
-
+        {% load cache %}
     </head>
     <body>
         <!-- Responsive navbar-->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
-            <div class="container">
-               <a class="navbar-brand" href="/">News portal</a>
-            {#               <button class="navbar-toggler" type="button" data-toggle="collapse"#}
-            {#                       data-target="#navbarResponsive"#}
-            {#                       aria-controls="navbarResponsive" aria-expanded="false"#}
-            {#                       aria-label="Toggle navigation">#}
-            {#                   <span class="navbar-toggler-icon"></span>#}
-            {#               </button>#}
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="/news">Home
-                           {% if request.path == '/news/' %}
-                               <span class="sr-only">(current)</span>
-                           {% endif %}
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/news/search/">Search
-                           {% if request.path == '/news/search/' %}
-                               <span class="sr-only">(current)</span>
-                           {% endif %}
-                        </a>
-                    </li>
-                    {% if perms.posts.add_post %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="/news/create/">Create news
-                               {% if request.path == '/news/create/' %}
+
+{#        {% cache 1 navigation %}#}
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+                <div class="container">
+                   <a class="navbar-brand" href="/">News portal</a>
+                {#               <button class="navbar-toggler" type="button" data-toggle="collapse"#}
+                {#                       data-target="#navbarResponsive"#}
+                {#                       aria-controls="navbarResponsive" aria-expanded="false"#}
+                {#                       aria-label="Toggle navigation">#}
+                {#                   <span class="navbar-toggler-icon"></span>#}
+                {#               </button>#}
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/news">Home
+                               {% if request.path == '/news/' %}
                                    <span class="sr-only">(current)</span>
                                {% endif %}
                             </a>
                         </li>
                         <li class="nav-item">
-                           <a class="nav-link" href="/article/create/">Create article
-                               {% if request.path == '/article/create/' %}
+                            <a class="nav-link" href="/news/search/">Search
+                               {% if request.path == '/news/search/' %}
                                    <span class="sr-only">(current)</span>
                                {% endif %}
-                           </a>
+                            </a>
+                        </li>
+                        {% if perms.posts.add_post %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="/news/create/">Create news
+                                   {% if request.path == '/news/create/' %}
+                                       <span class="sr-only">(current)</span>
+                                   {% endif %}
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                               <a class="nav-link" href="/article/create/">Create article
+                                   {% if request.path == '/article/create/' %}
+                                       <span class="sr-only">(current)</span>
+                                   {% endif %}
+                               </a>
 
-                       </li>
-                    {% endif %}
-                </ul>
+                           </li>
+                        {% endif %}
+                    </ul>
 
-            </div>
-            <h7 style="text-align: right; color: white;">{% current_time '%d %b %Y' %}</h7>
-            {% if user.is_authenticated %}
-{#                <p style="text-align: right; color: white; margin: 0 20px">{{ user }}</p>#}
-{#                <a href="{% url 'account_logout' %}">Logout</a>#}
-                {% include 'navbar.html' %}
-            {% else %}
-                <a style="text-align: right; margin: 0 20px" href="{% provider_login_url 'yandex' %}">Войти</a>
-            {% endif %}
-            </div>
-        </nav>
+                </div>
+                <h7 style="text-align: right; color: white;">{% current_time '%d %b %Y' %}</h7>
+                {% if user.is_authenticated %}
+    {#                <p style="text-align: right; color: white; margin: 0 20px">{{ user }}</p>#}
+    {#                <a href="{% url 'account_logout' %}">Logout</a>#}
+                    {% include 'navbar.html' %}
+                {% else %}
+                    <a style="text-align: right; margin: 0 20px" href="{% provider_login_url 'yandex' %}">Войти</a>
+                {% endif %}
+                </div>
+            </nav>
+{#        {% endcache %}#}
         <!-- Page content-->
         <div class="container">
            <div class="row">

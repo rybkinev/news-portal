@@ -2,6 +2,7 @@ from datetime import datetime
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import PermissionRequiredMixin, UserPassesTestMixin
+from django.core.cache import cache
 from django.db.models import Exists, OuterRef
 from django.shortcuts import render
 from django.urls import reverse_lazy
@@ -53,6 +54,15 @@ class PostDetailsView(DetailView):
     model = Post
     template_name = 'news_detail.html'
     context_object_name = 'post'
+
+    def get_object(self, *args, **kwargs):  # переопределяем метод получения объекта, как ни странно
+        obj = cache.get(f'post-{self.kwargs["pk"]}', None)
+
+        # если объекта нет в кэше, то получаем его и записываем в кэш
+        if not obj:
+            obj = super().get_object(queryset=self.queryset)
+            cache.set(f'post-{self.kwargs["pk"]}', obj)
+        return obj
 
     def get_context_data(self, **kwargs):
         context = super(PostDetailsView, self).get_context_data(**kwargs)

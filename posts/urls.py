@@ -1,11 +1,21 @@
 from django.urls import path, include
+from django.views.decorators.cache import cache_page
 
 from . import views
 from .views import subscriptions
 
 news_patterns = [
-    path('', views.PostsView.as_view(), name='news'),
-    path('<int:pk>', views.PostDetailsView.as_view(), name='news_detail'),
+    path(
+        '',
+        cache_page(60)(views.PostsView.as_view()),
+        name='news'
+    ),
+    path(
+        '<int:pk>',
+        # cache_page(60*5)(views.PostDetailsView.as_view()),
+        views.PostDetailsView.as_view(),
+        name='news_detail'
+    ),
     path('search/', views.PostsView.as_view(search=True), name='news_search'),
     path('create/', views.NewsCreateView.as_view(), name='news_create'),
     path('<int:pk>/edit/', views.PostEditView.as_view(), name='news_update'),
