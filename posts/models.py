@@ -1,4 +1,7 @@
+import datetime
+
 from django.contrib.auth.models import User
+from django.core.mail import EmailMultiAlternatives
 from django.db import models
 from textwrap import shorten
 import enum
@@ -76,6 +79,78 @@ class Post(models.Model):
     class Meta:
         verbose_name = 'Пост'
         verbose_name_plural = 'Посты'
+
+    @staticmethod
+    def sending_mail(post_id):
+        instance = Post.objects.get(id=post_id)
+
+        emails = User.objects.filter(
+            subscriptions__category__in=instance.categories.all()
+        ).values_list('email', flat=True)
+
+        subject = f'Новый пост среди выбранных вами категорий'
+
+        text_content = (
+            f'Заголовок: {instance.header}\n'
+            f'Ссылка: http://127.0.0.1:8000{instance.get_absolute_url()}'
+        )
+        html_content = (
+            f'Заголовок: {instance.header}<br>'
+            f'<a href="http://127.0.0.1{instance.get_absolute_url()}">'
+            f'Ссылка на пост</a>'
+        )
+        for email in emails:
+            msg = EmailMultiAlternatives(subject, text_content, None, [email])
+            msg.attach_alternative(html_content, "text/html")
+            msg.send()
+
+    @staticmethod
+    def sending_new_posts():
+
+        today = datetime.datetime.today()
+        today = today.replace(hour=0, minute=0, second=0, microsecond=0)
+        last_sending = today - datetime.timedelta(days=7)
+
+        last_posts = Post.objects \
+            .filter(
+            visible=True,
+            created_at__gt=last_sending
+        ).order_by('-created_at')
+
+        emails = Subscription.objects \
+            .filter(category__post__in=last_posts) \
+            .values_list('category__post', 'user__email') \
+            .distinct().order_by('user__email')
+
+        sending_dict = dict()
+        for post_id, email in emails:
+            post = Post.objects.get(id=post_id)
+            if email in sending_dict:
+                sending_dict[email].append(post)
+            else:
+                sending_dict[email] = [post]
+
+        subject = f'Новые посты с {last_sending.strftime("%x")}'
+        text_content = (
+            'Новые посты на портале:\n'
+        )
+        html_content = (
+            'Новые посты на портале:<br>'
+        )
+        for mail, posts in sending_dict.items():
+            msg = EmailMultiAlternatives(
+                subject,
+                text_content + '\n'.join([f'http://127.0.0.1{i.get_absolute_url()}' for i in posts]),
+                None,
+                [mail]
+            )
+
+            msg.attach_alternative(
+                html_content + '<br>'.join(
+                    [f'<a href="http://127.0.0.1{i.get_absolute_url()}">{i.header}</a>' for i in posts]),
+                "text/html"
+            )
+            msg.send()
 
 
 class PostCategory(models.Model):

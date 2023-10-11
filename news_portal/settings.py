@@ -9,10 +9,13 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+import logging
 import os
 from pathlib import Path
 
 from dotenv import load_dotenv
+
+logging.basicConfig(level=logging.DEBUG)
 
 load_dotenv()
 
@@ -174,3 +177,10 @@ EMAIL_USE_SSL = 'ssl' in os.environ.get('EMAIL_TLS_SSL', '').lower()
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_DEFAULT_FROM')
+
+# Redis-Celery
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'

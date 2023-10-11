@@ -13,7 +13,6 @@ from django_apscheduler.models import DjangoJobExecution
 from posts.models import Post, Subscription
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO)
 
 
 def sending_new_posts():
