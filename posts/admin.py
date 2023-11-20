@@ -3,8 +3,19 @@ from django.contrib import admin
 from posts.models import Post, Category, Comment, Censor
 
 
+def nullfy_rating(modeladmin, request, queryset):
+    queryset.update(rating=0)
+
+
+nullfy_rating.short_description = 'Обнулить рейтинг'
+
+
 class PostAdmin(admin.ModelAdmin):
     list_display = ('created_at', 'created_by', 'header', 'rating', 'visible', 'preview')
+    # list_display = [field.name for field in Post._meta.get_fields()]
+    list_filter = ('created_at', 'created_by', 'header')
+    search_fields = ('header', 'categories__name')
+    actions = [nullfy_rating]
 
 
 class CategoryAdmin(admin.ModelAdmin):
