@@ -206,6 +206,8 @@ log_dir = os.path.join(BASE_DIR, 'log')
 if not os.path.exists(log_dir):
     os.mkdir(log_dir)
 
+ADMINS = [("admin", "admin@admin.ru"), ("Mary", "mary@example.com")]
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
